@@ -5,29 +5,23 @@
  */
 
 #include "PortabilityImpl.hh"
-#ifdef LOG4CPP_HAVE_IO_H
-#    include <io.h>
-#endif
-#ifdef LOG4CPP_HAVE_UNISTD_H
-#    include <unistd.h>
-#endif
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include <log4cpp/DailyRollingFileAppender.hh>
 #include <log4cpp/Category.hh>
 #include <log4cpp/FactoryParams.hh>
+
+#include <sstream>
+#include <iomanip>
 #include <memory>
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
 #include <iostream>
 
-#ifdef LOG4CPP_HAVE_SSTREAM
-#include <sstream>
-#include <iomanip>
-#endif
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #ifndef WIN32    // only available on Win32
 #include <dirent.h>
@@ -169,7 +163,7 @@ namespace log4cpp {
 		log4cpp::FileAppender::_append(event);
 	}
 
-   std::auto_ptr<Appender> create_daily_roll_file_appender(const FactoryParams& params)
+   std::unique_ptr<Appender> create_daily_roll_file_appender(const FactoryParams& params)
    {
       std::string name, filename;
       bool append = true;
@@ -178,6 +172,6 @@ namespace log4cpp {
       params.get_for("daily roll file appender").required("name", name)("filename", filename)("max_days_keep", max_days_keep)
                                           .optional("append", append)("mode", mode);
 
-      return std::auto_ptr<Appender>(new DailyRollingFileAppender(name, filename, max_days_keep, append, mode));
+      return std::unique_ptr<Appender>(new DailyRollingFileAppender(name, filename, max_days_keep, append, mode));
    }
 }

@@ -9,18 +9,17 @@
 
 #include "PortabilityImpl.hh"
 
-#ifdef LOG4CPP_HAVE_UNISTD_H
-#    include <unistd.h>
-#endif
+#include <log4cpp/RemoteSyslogAppender.hh>
+#include <log4cpp/FactoryParams.hh>
+
+#include <memory>
 #include <cstdlib>
 #include <stdio.h>
 #include <cstring>
+#include <fcntl.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <fcntl.h>
-#include <log4cpp/RemoteSyslogAppender.hh>
-#include <log4cpp/FactoryParams.hh>
-#include <memory>
 
 #ifdef WIN32
 #include <winsock2.h>
@@ -175,12 +174,12 @@ namespace log4cpp {
         return true;
     }
     
-    std::auto_ptr<Appender> create_remote_syslog_appender(const FactoryParams& params)
+    std::unique_ptr<Appender> create_remote_syslog_appender(const FactoryParams& params)
     {
        std::string name, syslog_name, relayer;
        int facility = -1, port_number = -1;
        params.get_for("remote syslog appender").required("name", name)("syslog_name", syslog_name)("relayer", relayer)
                                                .optional("facility", facility)("port", port_number);
-       return std::auto_ptr<Appender>(new RemoteSyslogAppender(name, syslog_name, relayer, facility, port_number));
+       return std::unique_ptr<Appender>(new RemoteSyslogAppender(name, syslog_name, relayer, facility, port_number));
     }
 }

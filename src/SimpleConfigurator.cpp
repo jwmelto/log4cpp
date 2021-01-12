@@ -7,19 +7,6 @@
  */
 #include "PortabilityImpl.hh"
 
-#ifdef LOG4CPP_HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#ifdef LOG4CPP_HAVE_IO_H
-#    include <io.h>
-#endif
-
-#include <stdio.h>
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <stdio.h>
-
 #include <log4cpp/Category.hh>
 #include <log4cpp/Appender.hh>
 #include <log4cpp/OstreamAppender.hh>
@@ -42,6 +29,12 @@
 #ifdef WIN32
 #include <log4cpp/NTEventLogAppender.hh>
 #endif
+
+#include <cstdio>
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <unistd.h>
 
 namespace log4cpp {
 

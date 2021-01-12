@@ -7,30 +7,7 @@
  */
 #include "StringUtil.hh"
 #include <iterator>
-#include <stdio.h>
-
-#if defined(_MSC_VER)
-    #define VSNPRINTF _vsnprintf
-#else
-#ifdef LOG4CPP_HAVE_SNPRINTF
-    #define VSNPRINTF vsnprintf
-#else
-/* use alternative snprintf() from http://www.ijs.si/software/snprintf/ */
-
-#define HAVE_SNPRINTF
-#define PREFER_PORTABLE_SNPRINTF
-
-#include <stdlib.h>
-#include <stdarg.h>
-
-extern "C" {
-#include "snprintf.c"
-}
-
-#define VSNPRINTF portable_vsnprintf
-
-#endif // LOG4CPP_HAVE_SNPRINTF
-#endif // _MSC_VER
+#include <cstdio>
 
 namespace log4cpp {
 
@@ -47,7 +24,7 @@ namespace log4cpp {
             va_copy(args_copy, args);
 #endif
 
-            int n = VSNPRINTF(buffer, size, format, args_copy);
+            int n = vsnprintf(buffer, size, format, args_copy);
 
             va_end(args_copy);
                 

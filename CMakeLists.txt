@@ -8,29 +8,36 @@
 # (3) Do the usual "make clean all" to build the library
 # (4) To install either "make install" or "make install DESTDIR=<your directory>"
 # (5) Need to include changes in include/log4cpp/Portability.hh for OSX to build
+cmake_minimum_required( VERSION 3.11 FATAL_ERROR )
+set( CMAKE_LEGACY_CYGWIN_WIN32 0 )
+cmake_policy( SET CMP0048 NEW )
 
-PROJECT ( LOG4CPP )
+project( LOG4CPP )
 
-INCLUDE_DIRECTORIES ( include )
-INCLUDE_DIRECTORIES ( . )
+find_package( Threads )
 
-IF (WIN32)
-  ADD_DEFINITIONS ( -D_CRT_SECURE_NO_WARNINGS )
-ELSE (WIN32)
-  IF (APPLE)
-    ADD_DEFINITIONS ( -DNDEBUG -DLOG4CPP_HAVE_SSTREAM )
-  ELSE (APPLE)
-    ADD_DEFINITIONS ( -pthread -DNDEBUG -DLOG4CPP_HAVE_SSTREAM )
-  ENDIF (APPLE)
-ENDIF (WIN32)
+file( TOUCH ${CMAKE_SOURCE_DIR}/include/log4cpp/config.h )
 
-IF ( CMAKE_BUILD_TYPE MATCHES "Debug" )
-  SET ( LOG4CPP_LIBRARY_NAME "log4cppD" )
-ELSE ( CMAKE_BUILD_TYPE MATCHES "Debug" )
-  SET ( LOG4CPP_LIBRARY_NAME "log4cpp" )
-ENDIF ( CMAKE_BUILD_TYPE MATCHES "Debug" )
+set( CMAKE_CXX_STANDARD 11 )
+set( CMAKE_CXX_EXTENSIONS OFF )
 
-ADD_LIBRARY ( ${LOG4CPP_LIBRARY_NAME}
+if (WIN32)
+  add_definitions ( -D_CRT_SECURE_NO_WARNINGS )
+else (WIN32)
+  if (APPLE)
+    add_definitions ( -DNDEBUG -DLOG4CPP_HAVE_SSTREAM )
+  else (APPLE)
+    add_definitions ( -pthread -DNDEBUG -DLOG4CPP_HAVE_SSTREAM )
+  endif (APPLE)
+endif (WIN32)
+
+if ( CMAKE_BUILD_TYPE MATCHES "Debug" )
+  set ( LOG4CPP_LIBRARY_NAME "log4cppD" )
+else ( CMAKE_BUILD_TYPE MATCHES "Debug" )
+  set ( LOG4CPP_LIBRARY_NAME "log4cpp" )
+endif ( CMAKE_BUILD_TYPE MATCHES "Debug" )
+
+add_library ( ${LOG4CPP_LIBRARY_NAME}
   src/Appender.cpp
   src/AppenderSkeleton.cpp
   src/AppendersFactory.cpp
@@ -80,12 +87,17 @@ ADD_LIBRARY ( ${LOG4CPP_LIBRARY_NAME}
   src/AbortAppender.cpp
 )
 
-IF (WIN32)
-  TARGET_LINK_LIBRARIES (${LOG4CPP_LIBRARY_NAME} kernel32 user32 ws2_32 advapi32 )
-  SET_TARGET_PROPERTIES(${LOG4CPP_LIBRARY_NAME} PROPERTIES LINK_FLAGS /NODEFAULTLIB:msvcrt )
-ENDIF (WIN32)
+target_include_directories( ${LOG4CPP_LIBRARY_NAME} PUBLIC include )
 
-INSTALL (
+
+target_link_libraries( ${LOG4CPP_LIBRARY_NAME} Threads::Threads )
+
+if (WIN32)
+  target_link_libraries (${LOG4CPP_LIBRARY_NAME} kernel32 user32 ws2_32 advapi32 )
+  set_target_properties(${LOG4CPP_LIBRARY_NAME} PROPERTIES LINK_FLAGS /NODEFAULTLIB:msvcrt )
+endif (WIN32)
+
+install (
   DIRECTORY include/log4cpp
   DESTINATION include
   PATTERN "config.h" EXCLUDE
@@ -94,7 +106,7 @@ INSTALL (
   PATTERN "*.in" EXCLUDE
   )
 
-INSTALL (
+install (
   TARGETS ${LOG4CPP_LIBRARY_NAME}
   ARCHIVE DESTINATION lib
   )

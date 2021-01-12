@@ -8,19 +8,15 @@
  */
 
 #include "PortabilityImpl.hh"
-#ifdef LOG4CPP_HAVE_IO_H
-#    include <io.h>
-#endif
-#ifdef LOG4CPP_HAVE_UNISTD_H
-#    include <unistd.h>
-#endif
 
-#include <memory>
-#include <stdio.h>
-#include <time.h>
 #include <log4cpp/FileAppender.hh>
 #include <log4cpp/Category.hh>
 #include <log4cpp/FactoryParams.hh>
+
+#include <memory>
+#include <cstdio>
+#include <ctime>
+#include <unistd.h>
 
 namespace log4cpp {
 
@@ -99,7 +95,7 @@ namespace log4cpp {
         }      
     }
 
-   std::auto_ptr<Appender> create_file_appender(const FactoryParams& params)
+   std::unique_ptr<Appender> create_file_appender(const FactoryParams& params)
    {
       std::string name, filename;
       bool append = true;
@@ -108,6 +104,6 @@ namespace log4cpp {
       params.get_for("file appender").required("name", name)("filename", filename)
                                      .optional("append", append)("mode", mode);
 
-      return std::auto_ptr<Appender>(new FileAppender(name, filename, append, mode));
+      return std::unique_ptr<Appender>(new FileAppender(name, filename, append, mode));
    }
 }

@@ -30,11 +30,11 @@ namespace log4cpp {
         return _context;
     }
 
-    Priority::Value FixedContextCategory::getPriority() const throw() {
+    Priority::Value FixedContextCategory::getPriority() const {
         return Category::getPriority();
     }
    
-    Priority::Value FixedContextCategory::getChainedPriority() const throw() {
+    Priority::Value FixedContextCategory::getChainedPriority() const {
         Priority::Value result = getPriority();
 
         if (result == Priority::NOTSET) {
@@ -44,7 +44,7 @@ namespace log4cpp {
         return result;
     }
     
-    void FixedContextCategory::addAppender(Appender* appender) throw() {
+    void FixedContextCategory::addAppender(Appender* appender) {
         // XXX do nothing for now
     }
     
@@ -69,16 +69,15 @@ namespace log4cpp {
         // XXX do nothing for now
     }
 
-    bool FixedContextCategory::ownsAppender() const throw() {
+    bool FixedContextCategory::ownsAppender() const {
         return false;
     }
     
-    bool FixedContextCategory::ownsAppender(Appender* appender) const throw() {
+    bool FixedContextCategory::ownsAppender(Appender* appender) const {
         return false;
     }
     
-    void FixedContextCategory::callAppenders(const LoggingEvent& event)
-            throw() {
+    void FixedContextCategory::callAppenders(const LoggingEvent& event) {
         _delegate.callAppenders(event);
     }
 
@@ -86,12 +85,12 @@ namespace log4cpp {
         // XXX do nothing for now
     }
 
-    bool FixedContextCategory::getAdditivity() const throw() {
+    bool FixedContextCategory::getAdditivity() const {
         return _delegate.getAdditivity();
     }
 
     void FixedContextCategory::_logUnconditionally2(Priority::Value priority,
-            const std::string& message) throw() {
+            const std::string& message) {
         LoggingEvent event(getName(), message, _context, priority);
         callAppenders(event);
     }

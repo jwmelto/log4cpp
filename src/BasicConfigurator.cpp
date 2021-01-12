@@ -7,18 +7,13 @@
  */
 #include "PortabilityImpl.hh"
 
-#ifdef LOG4CPP_HAVE_IO_H
-#    include <io.h>
-#endif
-#ifdef LOG4CPP_HAVE_UNISTD_H
-#    include <unistd.h>
-#endif
-
-#include <cstdio>
 #include <log4cpp/BasicConfigurator.hh>
 #include <log4cpp/Category.hh>
 #include <log4cpp/FileAppender.hh>
 #include <log4cpp/Priority.hh>
+
+#include <cstdio>
+#include <unistd.h>
 
 namespace log4cpp {
 
