@@ -108,5 +108,5 @@ install (
 
 install (
   TARGETS ${LOG4CPP_LIBRARY_NAME}
-  ARCHIVE DESTINATION lib
+  LIBRARY
   )
