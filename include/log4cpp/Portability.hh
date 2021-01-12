@@ -38,7 +38,8 @@
 #   if defined(__MINGW32__)
 #       include <log4cpp/config-MinGW32.h>
 #   else
-#       include <log4cpp/config.h>
+// default config is empty
+//#       include <log4cpp/config.h>
 #   endif
 #endif
 #endif
