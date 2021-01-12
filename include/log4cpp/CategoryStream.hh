@@ -7,16 +7,15 @@
  * See the COPYING file for the terms of usage and distribution.
  */
 
-#ifndef _LOG4CPP_CATEGORYSTREAM_HH
-#define _LOG4CPP_CATEGORYSTREAM_HH
+#ifndef LOG4CPP_CATEGORYSTREAM_HH
+#define LOG4CPP_CATEGORYSTREAM_HH
 
 #include <log4cpp/Portability.hh>
 #include <log4cpp/Priority.hh>
-#include <ios>
-#ifdef LOG4CPP_HAVE_SSTREAM
-#include <sstream>
-#endif
 #include <log4cpp/Manipulator.hh>
+
+#include <ios>
+#include <sstream>
 
 namespace log4cpp {
 
@@ -143,4 +142,4 @@ namespace log4cpp {
    };
 }
 
-#endif // _LOG4CPP_CATEGORYSTREAM_HH
+#endif // LOG4CPP_CATEGORYSTREAM_HH

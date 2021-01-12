@@ -12,10 +12,9 @@
 #include <log4cpp/Portability.hh>
 #include <log4cpp/Layout.hh>
 #include <log4cpp/Configurator.hh>
+
 #include <vector>
-#ifdef LOG4CPP_HAVE_SSTREAM
 #include <sstream>
-#endif
 
 namespace log4cpp {
 

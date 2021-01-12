@@ -8,11 +8,12 @@
 #if !defined(h_3e645482_ae6a_43e5_8f81_abbc4200212d)
 #define h_3e645482_ae6a_43e5_8f81_abbc4200212d
 
+#include "Portability.hh"
+
 #include <map>
 #include <string>
 #include <sstream>
 #include <stdexcept>
-#include "Portability.hh"
 
 namespace log4cpp
 {
