@@ -6,32 +6,21 @@
 
 #include <log4cpp/Portability.hh>
 #include "Localtime.hh"
-#include <time.h>
-#include <memory.h>
+#include <ctime>
 
 namespace log4cpp         
 {
 
-#if defined(_MSC_VER) && defined(LOG4CPP_HAVE_LOCALTIME_R)
-   void localtime(const ::time_t* time, ::tm* t)
+// Portability of reentrant forms of localtime is problematic. POSIX
+// defines localtime_r but Microsoft wanted to invent their own (which
+// is non-standards conforming). For now, don't worry about it.
+   void localtime(std::time_t time, std::tm& t)
    {
-      localtime_s(t, time);  
+       auto tmp = std::localtime(&time);
+       if (tmp != nullptr)
+       {
+	   t = *tmp;
+       }
    }
-#endif
-
-#if !defined(_MSC_VER) && defined(LOG4CPP_HAVE_LOCALTIME_R)
-   void localtime(const ::time_t* time, ::tm* t)
-   {
-      localtime_r(time, t);
-   }
-#endif
-
-#if !defined(LOG4CPP_HAVE_LOCALTIME_R)
-   void localtime(const ::time_t* time, ::tm* t)
-   {
-      ::tm* tmp = ::localtime(time);
-      memcpy(t, tmp, sizeof(::tm));
-   }
-#endif
 
 }

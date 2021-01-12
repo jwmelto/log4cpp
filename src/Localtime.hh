@@ -7,11 +7,11 @@
 #ifndef _LOG4CPP_LOCALTIME_HH
 #define _LOG4CPP_LOCALTIME_HH
 
-#include <time.h>
+#include <ctime>
 
 namespace log4cpp
 {
-   void localtime(const ::time_t* time, ::tm* t);
+   void localtime(std::time_t time, std::tm& t);
 }
 
 #endif

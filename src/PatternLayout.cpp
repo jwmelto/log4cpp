@@ -8,43 +8,20 @@
 
 #include "PortabilityImpl.hh"
 
+#include "Localtime.hh"
+
 #include <log4cpp/PatternLayout.hh>
 #include <log4cpp/Priority.hh>
 #include <log4cpp/NDC.hh>
 #include <log4cpp/TimeStamp.hh>
 #include <log4cpp/FactoryParams.hh>
+
 #include <memory>
-
-#ifdef LOG4CPP_HAVE_SSTREAM
 #include <sstream>
-#else
-#include <strstream>
-#endif
-
 #include <iomanip>
 #include <ctime>
 #include <cstdlib>
-#include "Localtime.hh"
-
-#ifdef LOG4CPP_HAVE_INT64_T
-#ifdef LOG4CPP_HAVE_STDINT_H
-#include <stdint.h>
-#endif // LOG4CPP_HAVE_STDINT_H
-
-#ifdef LOG4CPP_MISSING_INT64_OSTREAM_OP
-/* workaround suggested at:
-   http://support.microsoft.com/default.aspx?scid=kb;EN-US;q168440
-*/
-
-#include <stdio.h>
- 
-std::ostream& operator<<(std::ostream& os, int64_t i) {
-    char buf[20];
-    ::sprintf(buf,"%I64d", i);
-    return os << buf;
-}
-#endif // LOG4CPP_MISSING_INT64_OSTREAM_OP
-#endif // LOG4CPP_HAVE_INT64_T
+#include <cstdint>
 
 namespace log4cpp {
 
@@ -66,11 +43,7 @@ namespace log4cpp {
             if (specifier == "") {
                 _precision = -1;
             } else {
-#ifdef LOG4CPP_HAVE_SSTREAM 
                 std::istringstream s(specifier);
-#else
-                std::istrstream s(specifier.c_str());
-#endif
                 s >> _precision;
             }
         }
@@ -155,8 +128,7 @@ namespace log4cpp {
 
         virtual void append(std::ostringstream& out, const LoggingEvent& event) {
             struct std::tm currentTime;
-            std::time_t t = event.timeStamp.getSeconds();
-            localtime(&t, &currentTime);
+            localtime(event.timeStamp.getSeconds(), currentTime);
             char formatted[100];
             std::string timeFormat;
             if (_printMillis) {
@@ -191,7 +163,6 @@ namespace log4cpp {
 
     struct MillisSinceEpochComponent : public PatternLayout::PatternComponent {
         virtual void append(std::ostringstream& out, const LoggingEvent& event) {
-#ifdef LOG4CPP_HAVE_INT64_T
             int64_t t = event.timeStamp.getSeconds() -
                 TimeStamp::getStartTime().getSeconds();
             t *= 1000;
@@ -199,16 +170,6 @@ namespace log4cpp {
                 TimeStamp::getStartTime().getMilliSeconds();
             
             out << t;
-#else
-            double t = event.timeStamp.getSeconds() -
-                TimeStamp::getStartTime().getSeconds();
-            t *= 1000;
-            t += event.timeStamp.getMilliSeconds() -
-                TimeStamp::getStartTime().getMilliSeconds();
-            
-            out << std::setiosflags(std::ios::fixed)
-                << std::setprecision(0) << t;
-#endif
         }
     };
 
@@ -277,11 +238,7 @@ namespace log4cpp {
     }
 
     void PatternLayout::setConversionPattern(const std::string& conversionPattern) {
-#ifdef LOG4CPP_HAVE_SSTREAM 
         std::istringstream conversionStream(conversionPattern);
-#else
-        std::istrstream conversionStream(conversionPattern.c_str());
-#endif
         std::string literal;
 
         char ch;
