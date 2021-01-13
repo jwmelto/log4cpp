@@ -14,8 +14,8 @@
 #include <log4cpp/Category.hh>
 
 #include <map>
+#include <mutex>
 #include <string>
-#include <thread>
 #include <vector>
 
 namespace log4cpp {

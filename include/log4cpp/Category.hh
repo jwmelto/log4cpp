@@ -19,8 +19,8 @@
 
 #include <cstdarg>
 #include <map>
+#include <mutex>
 #include <stdexcept>
-#include <thread>
 #include <vector>
 
 namespace log4cpp {
