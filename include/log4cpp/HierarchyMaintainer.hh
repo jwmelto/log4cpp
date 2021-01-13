@@ -11,11 +11,12 @@
 #define _LOG4CPP_HIERARCHYMAINTAINER_HH
 
 #include <log4cpp/Portability.hh>
-#include <string>
-#include <map>
-#include <vector>
 #include <log4cpp/Category.hh>
-#include <log4cpp/threading/Threading.hh>
+
+#include <map>
+#include <string>
+#include <thread>
+#include <vector>
 
 namespace log4cpp {
 
@@ -46,7 +47,7 @@ namespace log4cpp {
         virtual Category* _getExistingInstance(const std::string& name);
         virtual Category& _getInstance(const std::string& name);
         CategoryMap _categoryMap;
-        mutable threading::Mutex _categoryMutex;
+        mutable std::mutex _categoryMutex;
 
         private:
         typedef std::vector<shutdown_fun_ptr> handlers_t;

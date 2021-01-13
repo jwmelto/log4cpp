@@ -9,14 +9,13 @@
 
 #include "PortabilityImpl.hh"
 
-#ifdef LOG4CPP_HAVE_UNISTD_H
-#    include <unistd.h>
-#endif
+#include "StringUtil.hh"
 
 #include <log4cpp/Category.hh>
 #include <log4cpp/HierarchyMaintainer.hh>
 #include <log4cpp/NDC.hh>
-#include "StringUtil.hh"
+
+//#include <unistd.h>
 
 namespace log4cpp {
 
@@ -98,7 +97,7 @@ namespace log4cpp {
     
     void Category::addAppender(Appender* appender) {
         if (appender) {
-            threading::ScopedLock lock(_appenderSetMutex);
+            std::lock_guard<std::mutex> lock(_appenderSetMutex);
             {
                 AppenderSet::iterator i = _appender.find(appender);
                 if (_appender.end() == i) {
@@ -113,7 +112,7 @@ namespace log4cpp {
     }
     
     void Category::addAppender(Appender& appender) {
-        threading::ScopedLock lock(_appenderSetMutex);
+        std::lock_guard<std::mutex> lock(_appenderSetMutex);
         {
             AppenderSet::iterator i = _appender.find(&appender);
             if (_appender.end() == i) {
@@ -124,7 +123,7 @@ namespace log4cpp {
     }
     
     Appender* Category::getAppender() const {
-        threading::ScopedLock lock(_appenderSetMutex);
+        std::lock_guard<std::mutex> lock(_appenderSetMutex);
         {
             AppenderSet::const_iterator i = _appender.begin();
             return (_appender.end() == i) ? NULL : *i;
@@ -132,7 +131,7 @@ namespace log4cpp {
     }
 
     Appender* Category::getAppender(const std::string& name) const {
-        threading::ScopedLock lock(_appenderSetMutex);
+        std::lock_guard<std::mutex> lock(_appenderSetMutex);
         {
             AppenderSet::const_iterator i = _appender.begin();
             if (_appender.end() != i) {
@@ -146,14 +145,14 @@ namespace log4cpp {
     }
 
     AppenderSet Category::getAllAppenders() const {
-        threading::ScopedLock lock(_appenderSetMutex);
+        std::lock_guard<std::mutex> lock(_appenderSetMutex);
         {
             return _appender;
         }
     }
 
     void Category::removeAllAppenders() {
-        threading::ScopedLock lock(_appenderSetMutex);
+        std::lock_guard<std::mutex> lock(_appenderSetMutex);
         {
             for (AppenderSet::iterator i = _appender.begin();
                  i != _appender.end(); i++) {
@@ -170,7 +169,7 @@ namespace log4cpp {
     }
 
     void Category::removeAppender(Appender* appender) {
-        threading::ScopedLock lock(_appenderSetMutex);
+        std::lock_guard<std::mutex> lock(_appenderSetMutex);
         {
             AppenderSet::iterator i = _appender.find(appender);
             if (_appender.end() != i) {            
@@ -189,7 +188,7 @@ namespace log4cpp {
     bool Category::ownsAppender(Appender* appender) const {
         bool owned = false;
 
-        threading::ScopedLock lock(_appenderSetMutex);
+        std::lock_guard<std::mutex> lock(_appenderSetMutex);
         {
             if (NULL != appender) {            
                 OwnsAppenderMap::const_iterator i =
@@ -222,7 +221,7 @@ namespace log4cpp {
     }
 
     void Category::callAppenders(const LoggingEvent& event) {
-        threading::ScopedLock lock(_appenderSetMutex);
+        std::lock_guard<std::mutex> lock(_appenderSetMutex);
         {
             if (!_appender.empty()) {
                 for(AppenderSet::const_iterator i = _appender.begin();

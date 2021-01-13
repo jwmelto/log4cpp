@@ -92,7 +92,7 @@ namespace log4cpp {
 
     struct ThreadNameComponent : public PatternLayout::PatternComponent {
         virtual void append(std::ostringstream& out, const LoggingEvent& event) {
-            out << event.threadName;
+            out << event.threadId;
         }
     };
 

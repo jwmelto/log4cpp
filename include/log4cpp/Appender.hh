@@ -11,18 +11,20 @@
 #define _LOG4CPP_APPENDER_HH
 
 #include <log4cpp/Portability.hh>
+#include <log4cpp/Priority.hh>
+#include <log4cpp/Layout.hh>
+#include <log4cpp/LoggingEvent.hh>
+
 #include <string>
 #include <map>
 #include <set>
+#include <thread>
 #include <vector>
+
 #include <stdarg.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <log4cpp/Priority.hh>
-#include <log4cpp/Layout.hh>
-#include <log4cpp/LoggingEvent.hh>
-#include <log4cpp/threading/Threading.hh>
 
 namespace log4cpp {
     class LOG4CPP_EXPORT Filter;
@@ -143,25 +145,26 @@ namespace log4cpp {
 
         const std::string _name;
 
-		public:
-		class AppenderMapStorage {
-		public:
-			Appender::AppenderMap* _allAppenders;	// single shared instance, nifty-counter defensed
-	        threading::Mutex _appenderMapMutex;	// mutex protecting map from multiple thread access 
+    public:
+	class AppenderMapStorage {
+	public:
+	  Appender::AppenderMap* _allAppenders;	// single shared instance, nifty-counter defensed
+	  std::mutex _appenderMapMutex;	// mutex protecting map from multiple thread access 
 
-			AppenderMapStorage();
-			~AppenderMapStorage();
-		};
-		class LOG4CPP_EXPORT AppenderMapStorageInitializer {
-		public:
-			AppenderMapStorageInitializer();
-			~AppenderMapStorageInitializer();
-		};
-		private:
+	  AppenderMapStorage();
+	  ~AppenderMapStorage();
+	};
+	class LOG4CPP_EXPORT AppenderMapStorageInitializer {
+	public:
+	  AppenderMapStorageInitializer();
+	  ~AppenderMapStorageInitializer();
+	};
+
+    private:
         static AppenderMapStorage &_appenderMapStorageInstance;
     };
 
-	static Appender::AppenderMapStorageInitializer appenderMapStorageInitializer; // static initializer for every translation unit
+    static Appender::AppenderMapStorageInitializer appenderMapStorageInitializer; // static initializer for every translation unit
     typedef std::set<Appender *> AppenderSet;
 
 }

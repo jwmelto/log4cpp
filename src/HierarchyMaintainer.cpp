@@ -9,16 +9,10 @@
 
 #include "PortabilityImpl.hh"
 
-#ifdef LOG4CPP_HAVE_IO_H
-#    include <io.h>
-#endif
-#ifdef LOG4CPP_HAVE_UNISTD_H
-#    include <unistd.h>
-#endif
-
-#include <cstdio>
 #include <log4cpp/HierarchyMaintainer.hh>
 #include <log4cpp/FileAppender.hh>
+
+#include <cstdio>
 
 namespace log4cpp {
 
@@ -37,7 +31,7 @@ namespace log4cpp {
     }
 
     Category* HierarchyMaintainer::getExistingInstance(const std::string& name) {
-        threading::ScopedLock lock(_categoryMutex);
+        std::lock_guard<std::mutex> lock(_categoryMutex);
         return _getExistingInstance(name);
     }
 
@@ -53,7 +47,7 @@ namespace log4cpp {
     }
 
     Category& HierarchyMaintainer::getInstance(const std::string& name) {
-        threading::ScopedLock lock(_categoryMutex);
+        std::lock_guard<std::mutex> lock(_categoryMutex);
         return _getInstance(name);
     }
 
@@ -84,7 +78,7 @@ namespace log4cpp {
     std::vector<Category*>* HierarchyMaintainer::getCurrentCategories() const {
         std::vector<Category*>* categories = new std::vector<Category*>;
 
-        threading::ScopedLock lock(_categoryMutex);
+        std::lock_guard<std::mutex> lock(_categoryMutex);
         {
             for(CategoryMap::const_iterator i = _categoryMap.begin(); i != _categoryMap.end(); i++) {
                 categories->push_back((*i).second);
@@ -95,7 +89,7 @@ namespace log4cpp {
     }
 
     void HierarchyMaintainer::shutdown() {
-        threading::ScopedLock lock(_categoryMutex);
+        std::lock_guard<std::mutex> lock(_categoryMutex);
         {
             for(CategoryMap::const_iterator i = _categoryMap.begin(); i != _categoryMap.end(); i++) {
                 ((*i).second)->removeAllAppenders();
@@ -119,7 +113,7 @@ namespace log4cpp {
     }
 
     void HierarchyMaintainer::deleteAllCategories() {
-        threading::ScopedLock lock(_categoryMutex);
+        std::lock_guard<std::mutex> lock(_categoryMutex);
         {
             for(CategoryMap::const_iterator i = _categoryMap.begin(); i != _categoryMap.end(); i++) {
                 delete ((*i).second);

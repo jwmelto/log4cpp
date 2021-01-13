@@ -21,6 +21,6 @@ namespace log4cpp {
         message(message),
         ndc(ndc),
         priority(priority),
-        threadName(threading::getThreadId()) {
+        threadId(std::this_thread::get_id()) {
     }
 }

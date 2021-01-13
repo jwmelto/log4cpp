@@ -19,17 +19,13 @@ namespace log4cpp {
     }
 
     NDC::DiagnosticContext::DiagnosticContext(const std::string& message, 
-            const DiagnosticContext& parent) :
+					      const DiagnosticContext& parent) :
         message(message),
         fullMessage(parent.fullMessage + " " + message) {
     }
 
-	bool NDC::isUsedNDC = false;
-	const std::string NDC::emptyString = "";
-
-	namespace {
-        threading::ThreadLocalDataHolder<NDC> _nDC;
-    }
+    bool NDC::isUsedNDC = false;
+    const std::string NDC::emptyString = "";
 
     void NDC::clear() {
         getNDC()._clear();
@@ -69,14 +65,8 @@ namespace log4cpp {
     }
 
     NDC& NDC::getNDC() {
-        NDC* nDC = _nDC.get();
-
-        if (!nDC) {
-            nDC = new NDC();
-            _nDC.reset(nDC);
-        }
-
-        return *nDC;
+	thread_local NDC _nDC;
+	return _nDC;
     }
 
     NDC::NDC() {

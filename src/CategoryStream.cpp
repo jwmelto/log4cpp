@@ -10,12 +10,12 @@
 
 #include "PortabilityImpl.hh"
 
-#ifdef LOG4CPP_HAVE_UNISTD_H
-#    include <unistd.h>
-#endif
-
 #include <log4cpp/CategoryStream.hh>
 #include <log4cpp/Category.hh>
+
+
+// #include <unistd.h>
+
 
 namespace log4cpp {
 

@@ -15,13 +15,13 @@
 #include <log4cpp/LoggingEvent.hh>
 #include <log4cpp/Priority.hh>
 #include <log4cpp/CategoryStream.hh>
-#include <log4cpp/threading/Threading.hh>
 #include <log4cpp/convenience.h>
 
-#include <map>
-#include <vector>
 #include <cstdarg>
+#include <map>
 #include <stdexcept>
+#include <thread>
+#include <vector>
 
 namespace log4cpp {
 
@@ -654,7 +654,7 @@ namespace log4cpp {
                                   OwnsAppenderMap::iterator& i2);
 
         AppenderSet _appender;
-        mutable threading::Mutex _appenderSetMutex;
+        mutable std::mutex _appenderSetMutex;
 
         /**
          * Whether the category holds the ownership of the appender. If so,

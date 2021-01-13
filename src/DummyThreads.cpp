@@ -6,8 +6,6 @@
 
 #include <log4cpp/threading/Threading.hh>
 
-#ifndef LOG4CPP_HAVE_THREADING
-
 namespace log4cpp {
     namespace threading {
 
@@ -19,4 +17,3 @@ namespace log4cpp {
     }
 }
 
-#endif // LOG4CPP_HAVE_THREADING

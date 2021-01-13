@@ -71,10 +71,10 @@ add_library ( ${LOG4CPP_LIBRARY_NAME}
   src/Win32DebugAppender.cpp
   src/NTEventLogAppender.cpp
   src/DllMain.cpp
-  src/DummyThreads.cpp
-  src/MSThreads.cpp
-  src/OmniThreads.cpp
-  src/PThreads.cpp
+#  src/DummyThreads.cpp
+#  src/MSThreads.cpp
+#  src/OmniThreads.cpp
+#  src/PThreads.cpp
   src/AbortAppender.cpp
 )
 

@@ -11,10 +11,12 @@
 #define _LOG4CPP_LOGGINGEVENT_HH
 
 #include <log4cpp/Portability.hh>
-#include <string>
-
 #include <log4cpp/Priority.hh>
 #include <log4cpp/TimeStamp.hh>
+
+#include <thread>
+#include <string>
+
 
 /**
  * The top level namespace for all 'Log for C++' types and classes.
@@ -58,10 +60,8 @@ namespace log4cpp {
         /** Priority of logging event. */
         Priority::Value priority;
 
-        /** The name of thread in which this logging event was generated,
-            e.g. the PID. 
-        */
-        const std::string threadName;
+        /** The thread in which this logging event was generated */
+	std::thread::id threadId;
 
         /** The number of seconds elapsed since the epoch 
             (1/1/1970 00:00:00 UTC) until logging event was created. */

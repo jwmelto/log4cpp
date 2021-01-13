@@ -10,13 +10,14 @@
 
 #ifdef LOG4CPP_HAVE_LIBIDSA
 
+#include <log4cpp/IdsaAppender.hh>
+#include <log4cpp/FactoryParams.hh>
+
+#include <memory>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <log4cpp/IdsaAppender.hh>
-#include <log4cpp/FactoryParams.hh>
-#include <memory>
 
 namespace log4cpp {
 
