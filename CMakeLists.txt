@@ -78,6 +78,10 @@ add_library ( ${LOG4CPP_LIBRARY_NAME}
   src/AbortAppender.cpp
 )
 
+set_target_properties( ${LOG4CPP_LIBRARY_NAME}
+  PROPERTIES POSITION_INDEPENDENT_CODE ON
+)
+
 target_include_directories( ${LOG4CPP_LIBRARY_NAME} PUBLIC include )
 
 
